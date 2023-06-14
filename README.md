@@ -32,7 +32,7 @@ $$
 h = 3 \text{m}
 $$
 
-![1686704832518](image/README/1686704832518.gif)
+![DCAPT2](content/DCAPT_h_3.gif "D-CAPT h=3")
 
 $$
 h = 10 \text{m}
