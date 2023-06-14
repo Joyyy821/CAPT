@@ -1,8 +1,26 @@
 function [X_next,F_next, G_R, U, is_stop] = DCAPT_step(X, F, h, vmax, dt, U, G_prev)
-%DCAPT_step Summary of this function goes here
-%   Detailed explanation goes here
+%DCAPT_STEP Decentralized CAPT algorithm (2D)
+%   Author: Yang Jiao (UCSD)
+%
+%   INPUTS
+%   X: current location of the robots (size N x 2);
+%   G: location of the goals assigned to the robots (size N x 2);
+%   h: robot sensing range;
+%   vmax: maximum velocity of the robots;
+%   dt: time step;
+%   U: update lists for each robot (size N x N);
+%   G_prev: h-disk proximity graph (from the previous time step);
+%
+%   OUTPUTS
+%   X_next: robot locations at the next time step (size N x 2);
+%   F_next: the goal assigned to each robot at the next time step (size N x
+%   2);
+%   G_R: the updated h-disk proximity graph (size N x N);
+%   U: the update list for each robot (size N x N);
+%   is_stop: true if all robots reached goal locations.
+
     G_R = getProximity(X, h);
-    if nargin == 5
+    if nargin == 5  % Initialization
         X_next = X; F_next = F; U = G_R; is_stop = false;
         return
     end
@@ -13,6 +31,7 @@ function [X_next,F_next, G_R, U, is_stop] = DCAPT_step(X, F, h, vmax, dt, U, G_p
     [N, ~] = size(X);
     PHI = eye(N);
     switch_pairs = [];
+    % Update all robots
     for i=1:N
         Ci = G_R(i, :);
         Ci_prev = G_prev(i, :);
@@ -22,55 +41,35 @@ function [X_next,F_next, G_R, U, is_stop] = DCAPT_step(X, F, h, vmax, dt, U, G_p
             end
         end
         U(i, :) = U(i, :) & Ci;
-%         Ui = U(i, :);
         
         xi = X(i, :); fi = F(i, :);
-%         sp = [0, 0];
         for j=1:N
             if U(i, j)
                 xj = X(j, :); fj = F(j, :);
                 uij = xj - xi; wij = fj - fi;
                 if uij * wij' < 0
                     % switch goal signal
-%                     sp = [i, j];
                     switch_pairs = [switch_pairs; i, j];
-%                     k = logical(PHI(i, :));
-%                     PHI(i, j) = 1; PHI(i, k) = 0;
-%                     l = logical(PHI(j, :));
-%                     PHI(j, i) = 1; PHI(j, l) = 0;
                     U(i, :) = Ci;
-%                     Ui = Ci;
                 end
-                U(i, j) = 0;
-%                 end
+%                 U(i, j) = 0;
             end
         end
-%         if any(sp)
-%             switch_pairs = [switch_pairs; sp];
-%         end
     end
     % Perform goal switching
     if ~isempty(switch_pairs)
-        disp(switch_pairs)
-%     [K, ~] = size(switch_pairs);
+%         disp(switch_pairs)
         ls = [];
         for k=1:N
-    %         l = logical(PHI(switch_pairs(k,1), :));
-    %         PHI(switch_pairs(k,1), switch_pairs(k,2)) = 1;
-    %         PHI(switch_pairs(k,1), l) = 0;
             if ~isempty(find(ls==k, 1))
                 continue;
             end
             idx = find(switch_pairs(:,1)==k, 1);
             if ~isempty(idx)
                 l = switch_pairs(idx, 2);
-%                 if ~isempty(find(ls==l, 1))
-%                     continue;
-%                 end
                 ls = [ls, l];
                 m = logical(PHI(k, :));
                 n = logical(PHI(l, :));
-%                 p = logical(PHI(n, :));
                 PHI(k, n) = 1; PHI(k, m) = 0;
                 PHI(l, k) = 1; PHI(l, n) = 0;
             end
@@ -100,7 +99,13 @@ function [X_next,F_next, G_R, U, is_stop] = DCAPT_step(X, F, h, vmax, dt, U, G_p
 end
 
 function G_R = getProximity(X, h)
-% TODO comments
+% GETPROXIMITY Find the current h-disk proximity graph
+%   INPUTS
+%   X: current robot locations (size N x 2);
+%   h: robot sensing range;
+%   OUTPUT
+%   G_R: current h-disk proximity graph (sensing graph, size N x N).
+
     [N, ~] = size(X);
     G_R = zeros(N);
     for i=1:N

@@ -1,5 +1,16 @@
 function [gamma_x, gamma_y, G] = CCAPT(X0, G, vmax, dt)
-%CCAPT Summary of this function goes here
+%CCAPT Centralized CAPT algorithm (2D)
+%   Author: Yang Jiao (UCSD)
+%
+%   INPUTS
+%   X0: initial location of the robots (size N x 2);
+%   G: location of the goals (size N x 2);
+%   vmax: maximum velocity of the robots;
+%   OUTPUTS
+%   gamma_x: a list of the x-coordinates of the trajcetory of the robots 
+%            (size T x N, where T is the toatl number of time steps);
+%   gamma_y: a list of the y-coordinates of the trajcetory of the robots 
+%            (size T x N).
 
 [N, ~] = size(X0);
 [M, ~] = size(G);

@@ -1,5 +1,7 @@
 function [X0, G] = RandomInit(N, M, R, ws)
 %RANDOMINIT Randomly select initial points for robot and goals
+%   Author: Yang Jiao (UCSD)
+%
 %   INPUTS
 %   N, M: number of robots and goals;
 %   R: robot radius;
@@ -9,19 +11,24 @@ function [X0, G] = RandomInit(N, M, R, ws)
 %   G: goal locations (size M x 2).
 
     delta = 3*R;
-    if 1 % N > M
-        P = random_select(M+N, ws, delta);
-        % Select goal and robot from P
-        ps = randperm(M+N);
-        G = P(ps(1:M), :);
-        X0 = P(ps(M+1:M+N), :);
-    else
-        X0 = random_select(N, ws, delta);
-        G = random_select(M, ws, delta);
-    end
+
+    P = random_select(M+N, ws, delta);
+    % Select goal and robot from P
+    ps = randperm(M+N);
+    G = P(ps(1:M), :);
+    X0 = P(ps(M+1:M+N), :);
 end
 
 function P = random_select(N, ws, delta)
+%RANDOM_SELECT Randomly select N (grid) points in a given workspace with
+%certain clearance distance (grid length) between sampled points
+%   INPUTS
+%   N: number of items to sample;
+%   ws: workspace size;
+%   delta: clearance distance;
+%   OUTPUT
+%   P: sample coordinates (size N x 2).
+
     xlen = ws(1); ylen = ws(2);
     grid_x = floor(xlen/delta); 
     grid_y = floor(ylen/delta);
