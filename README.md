@@ -2,7 +2,7 @@
 
 This repository is a course project of paper review.
 
-Course: MAE247 - Cooperative Control of Multi-Agent Sytem @ University of California San Diego (SP23)
+Course: MAE247 - Cooperative Control of Multi-Agent System @ University of California San Diego (SP23)
 
 Author: Yang Jiao
 
