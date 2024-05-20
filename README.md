@@ -8,7 +8,7 @@ Author: Yang Jiao
 
 [Link to the original paper here](https://journals.sagepub.com/doi/10.1177/0278364913515307)
 
-This is an re-implementation of the CAPT algorithm, both centralized and decentralized versions. All of the implementation was finished in MATLAB *R2022b*. The execution can be performed by open `src/UI.mlapp` in **MATLAB App Designer** as shown below, and click on the `Run` button.
+This is a re-implementation of the CAPT algorithm, both centralized and decentralized versions. All of the implementation was finished in MATLAB *R2022b*. The execution can be performed by opening `src/UI.mlapp` in **MATLAB App Designer** as shown below, and clicking on the `Run` button.
 
 ![App](content/AppDesigner.png "App Designer")
 
